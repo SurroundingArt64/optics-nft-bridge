@@ -63,6 +63,9 @@ describe("Router", () => {
 
 			await Native721.mintBatch(100);
 			await NonNative721.mintBatch(100);
+
+			await NonNative721.setLocalRouter(ERC721RemoteRouter.address);
+			await Native721.setLocalRouter(ERC721LocalRouter.address);
 		});
 
 		it("transfer from local to remote", async () => {
@@ -78,7 +81,60 @@ describe("Router", () => {
 					remoteDomain,
 					deployer.address
 				)
-			).to.emit(MockHome, "Dispatch");
+			)
+				.to.emit(MockHome, "Dispatch")
+				.to.emit(Native721, "Transfer")
+				.withArgs(deployer.address, ERC721LocalRouter.address, 1);
+		});
+
+		it("mint on remote on receiving transfer", async () => {
+			const { Native721, NonNative721 } = deployer;
+			const {
+				ERC721LocalRouter,
+				MockXAppConnectionManagerRemote,
+				ERC721RemoteRouter,
+			} = deployer;
+
+			await Native721.setApprovalForAll(ERC721LocalRouter.address, true);
+
+			await ERC721LocalRouter.send(
+				Native721.address,
+				1,
+				remoteDomain,
+				deployer.address
+			);
+
+			const abiCoder = new ethers.utils.AbiCoder();
+			const encoding = abiCoder.encode(
+				[
+					"address",
+					"uint32",
+					"uint32",
+					"address",
+					"address",
+					"uint256",
+					"uint8",
+				],
+				[
+					Native721.address,
+					localDomain,
+					remoteDomain,
+					NonNative721.address,
+					deployer.address,
+					1,
+					1,
+				]
+			);
+
+			// console.log({ encoding });
+			const sender = await ERC721RemoteRouter.remotes(localDomain);
+			// console.log(
+			// 	sender,
+			// 	ethers.utils.formatBytes32String(ERC721LocalRouter.address)
+			// );
+			// deployer contract is replica
+
+			await ERC721RemoteRouter.handle(localDomain, sender, encoding);
 		});
 	});
 });

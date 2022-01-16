@@ -1,6 +1,11 @@
 import { HardhatEthersHelpers } from "@nomiclabs/hardhat-ethers/types";
 import { deployments } from "hardhat";
-import { ERC721Router, Native721, NonNative721 } from "../typechain";
+import {
+	ERC721Router,
+	MockXAppConnectionManager,
+	Native721,
+	NonNative721,
+} from "../typechain";
 
 export const setupTest = deployments.createFixture(
 	async ({ deployments, getNamedAccounts, ethers }) => {
@@ -21,6 +26,10 @@ export const setupTest = deployments.createFixture(
 		const ERC721LocalRouter = await ethers.getContract("ERC721LocalRouter");
 		const MockHome = await ethers.getContract("MockHome");
 
+		const MockXAppConnectionManagerRemote = await ethers.getContract(
+			"MockXAppConnectionManagerRemote"
+		);
+
 		return {
 			deployer: {
 				address: deployer,
@@ -29,6 +38,8 @@ export const setupTest = deployments.createFixture(
 				NonNative721: NonNative721 as NonNative721,
 				Native721: Native721 as Native721,
 				MockHome,
+				MockXAppConnectionManagerRemote:
+					MockXAppConnectionManagerRemote as MockXAppConnectionManager,
 			},
 			tokenMapper: {
 				address: tokenMapper,

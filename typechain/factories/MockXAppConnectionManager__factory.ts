@@ -29,6 +29,11 @@ const _abi = [
         name: "__localDomain",
         type: "uint32",
       },
+      {
+        internalType: "address",
+        name: "_replica",
+        type: "address",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -47,6 +52,25 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_replica",
+        type: "address",
+      },
+    ],
+    name: "isReplica",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "localDomain",
     outputs: [
@@ -59,10 +83,23 @@ const _abi = [
     stateMutability: "view",
     type: "function",
   },
+  {
+    inputs: [],
+    name: "replica",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
 const _bytecode =
-  "0x608060405234801561001057600080fd5b5060405161019c38038061019c8339818101604052604081101561003357600080fd5b810190808051906020019092919080519060200190929190505050816000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505060fe8061009e6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c80638d3638f41460375780639fa92f9d146059575b600080fd5b603d608b565b604051808263ffffffff16815260200191505060405180910390f35b605f60a4565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008060149054906101000a900463ffffffff16905090565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea2646970667358221220afd3ff836c2b1fe11d82323a6f9928ddfdfc7c73f5e694b54a059927e175607464736f6c63430007060033";
+  "0x608060405234801561001057600080fd5b506040516103483803806103488339818101604052606081101561003357600080fd5b81019080805190602001909291908051906020019092919080519060200190929190505050826000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555081600060146101000a81548163ffffffff021916908363ffffffff16021790555080600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050505061023c8061010c6000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c80635190bc53146100515780637c7f6e2c146100ab5780638d3638f4146100df5780639fa92f9d14610103575b600080fd5b6100936004803603602081101561006757600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610137565b60405180821515815260200191505060405180910390f35b6100b3610149565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100e761016f565b604051808263ffffffff16815260200191505060405180910390f35b61010b610188565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6000610142826101ac565b9050919050565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008060149054906101000a900463ffffffff16905090565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008173ffffffffffffffffffffffffffffffffffffffff16600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1614905091905056fea26469706673582212202a896c5ca50976f93961b684d24b95ea859c76200b8c655c4133df3d5c765d1264736f6c63430007060033";
 
 export class MockXAppConnectionManager__factory extends ContractFactory {
   constructor(
@@ -78,20 +115,28 @@ export class MockXAppConnectionManager__factory extends ContractFactory {
   deploy(
     _home: string,
     __localDomain: BigNumberish,
+    _replica: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<MockXAppConnectionManager> {
     return super.deploy(
       _home,
       __localDomain,
+      _replica,
       overrides || {}
     ) as Promise<MockXAppConnectionManager>;
   }
   getDeployTransaction(
     _home: string,
     __localDomain: BigNumberish,
+    _replica: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): TransactionRequest {
-    return super.getDeployTransaction(_home, __localDomain, overrides || {});
+    return super.getDeployTransaction(
+      _home,
+      __localDomain,
+      _replica,
+      overrides || {}
+    );
   }
   attach(address: string): MockXAppConnectionManager {
     return super.attach(address) as MockXAppConnectionManager;
