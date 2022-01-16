@@ -2,17 +2,24 @@
 
 Project Structure:
 
-.-
+```
+..
+|-- optics-monorepo   : https://github.com/celo-org/optics-monorepo/
+|-- optics-nft-bridge : https://github.com/SurroundingArt64/optics-nft-bridge
 
----`optics-monorepo`: https://github.com/celo-org/optics-monorepo/
+```
 
----`optics-nft-bridge`: https://github.com/SurroundingArt64/optics-nft-bridge
+How the bridge works:
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+Bridge expects that a token has already been deployed on any one of the chains. (native)
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+Bridge asks token Owner to deploy an NFT contract on remote chain from same wallet or have same owner. (non-native)
 
-Try running some of the following tasks:
+Then, owner/governance of Router can map a token from local to remote and vice-versa if native and non-native deployed from same wallet(manual verification).
+
+The mapping exists such that no-one can mint on non-native chain except the router on that chain.
+
+
 
 ```shell
 npx hardhat compile
