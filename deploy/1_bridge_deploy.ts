@@ -50,18 +50,20 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 	const localDomain = 0;
 	const remoteDomain = 1;
 
-	execute(
+	await execute(
 		"ERC721LocalRouter",
 		{ from: deployer },
 		"enrollRemoteRouterByAddress",
-		[remoteDomain, RemoteRouter.address]
+		remoteDomain,
+		RemoteRouter.address
 	);
 
-	execute(
+	await execute(
 		"ERC721RemoteRouter",
 		{ from: deployer },
 		"enrollRemoteRouterByAddress",
-		[localDomain, LocalRouter.address]
+		localDomain,
+		LocalRouter.address
 	);
 };
 export default func;

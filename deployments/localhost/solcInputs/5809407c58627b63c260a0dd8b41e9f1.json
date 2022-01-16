@@ -1,0 +1,38 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/nft/test/MockHome.sol": {
+      "content": "// SPDX-License-Identifier: MIT OR Apache-2.0\npragma solidity >=0.6.11;\n\ncontract MockHome {\n\tevent Dispatch(uint32, bytes32, bytes);\n\n\tfunction dispatch(\n\t\tuint32 _destinationDomain,\n\t\tbytes32 _recipientAddress,\n\t\tbytes memory _messageBody\n\t) public {\n\t\temit Dispatch(_destinationDomain, _recipientAddress, _messageBody);\n\t}\n}\n"
+    },
+    "contracts/nft/test/MockXAppConnectionManager.sol": {
+      "content": "// SPDX-License-Identifier: MIT OR Apache-2.0\npragma solidity >=0.6.11;\n\ncontract MockXAppConnectionManager {\n\taddress public home;\n\n\tconstructor(address _home) {\n\t\thome = _home;\n\t}\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

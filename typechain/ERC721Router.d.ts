@@ -22,6 +22,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface ERC721RouterInterface extends ethers.utils.Interface {
   functions: {
     "enrollRemoteRouter(uint32,bytes32)": FunctionFragment;
+    "enrollRemoteRouterByAddress(uint32,address)": FunctionFragment;
     "handle(uint32,bytes32,bytes)": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
     "localTokenData(address)": FunctionFragment;
@@ -39,6 +40,10 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "enrollRemoteRouter",
     values: [BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "enrollRemoteRouterByAddress",
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "handle",
@@ -88,6 +93,10 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
 
   decodeFunctionResult(
     functionFragment: "enrollRemoteRouter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "enrollRemoteRouterByAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "handle", data: BytesLike): Result;
@@ -182,6 +191,12 @@ export class ERC721Router extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    enrollRemoteRouterByAddress(
+      _domain: BigNumberish,
+      _router: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     handle(
       _origin: BigNumberish,
       _sender: BytesLike,
@@ -249,6 +264,12 @@ export class ERC721Router extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  enrollRemoteRouterByAddress(
+    _domain: BigNumberish,
+    _router: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   handle(
     _origin: BigNumberish,
     _sender: BytesLike,
@@ -310,6 +331,12 @@ export class ERC721Router extends BaseContract {
     enrollRemoteRouter(
       _domain: BigNumberish,
       _router: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    enrollRemoteRouterByAddress(
+      _domain: BigNumberish,
+      _router: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -394,6 +421,12 @@ export class ERC721Router extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    enrollRemoteRouterByAddress(
+      _domain: BigNumberish,
+      _router: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     handle(
       _origin: BigNumberish,
       _sender: BytesLike,
@@ -456,6 +489,12 @@ export class ERC721Router extends BaseContract {
     enrollRemoteRouter(
       _domain: BigNumberish,
       _router: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    enrollRemoteRouterByAddress(
+      _domain: BigNumberish,
+      _router: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
