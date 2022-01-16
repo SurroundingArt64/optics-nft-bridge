@@ -56,7 +56,6 @@ contract ERC721Router is ERC721Registry, Router {
 				ERC721Message.ActionType.Invalid,
 			"Invalid action type"
 		);
-		console.log(localDomain, _localDomain());
 		// check if details are correct
 		require(localDomain == _localDomain(), "Invalid domain");
 		require(

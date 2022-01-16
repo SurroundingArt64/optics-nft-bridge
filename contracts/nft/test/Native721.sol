@@ -9,11 +9,11 @@ contract Native721 is ERC721 {
 		ERC721(_name, _symbol)
 	{}
 
-	function mint() public {
+	function mint() public virtual {
 		_mint(msg.sender, counter++);
 	}
 
-	function mintBatch(uint256 tokenIds) public {
+	function mintBatch(uint256 tokenIds) public virtual {
 		for (uint256 index = 0; index < tokenIds; index++) {
 			mint();
 		}
