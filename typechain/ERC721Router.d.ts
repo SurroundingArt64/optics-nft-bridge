@@ -32,6 +32,7 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
     "remotes(uint32)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "send(address,uint256,uint32,address)": FunctionFragment;
+    "setTokenMapper(address)": FunctionFragment;
     "setXAppConnectionManager(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "xAppConnectionManager()": FunctionFragment;
@@ -79,6 +80,10 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
     values: [string, BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "setTokenMapper",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setXAppConnectionManager",
     values: [string]
   ): string;
@@ -118,6 +123,10 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "send", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "setTokenMapper",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setXAppConnectionManager",
     data: BytesLike
   ): Result;
@@ -131,11 +140,22 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "MapTokens(address,uint32,address,bool)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "MapTokens"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
+
+export type MapTokensEvent = TypedEvent<
+  [string, number, string, boolean] & {
+    localToken: string;
+    domain: number;
+    remoteToken: string;
+    isNative: boolean;
+  }
+>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string] & { previousOwner: string; newOwner: string }
@@ -245,6 +265,11 @@ export class ERC721Router extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setTokenMapper(
+      __tokenMapper: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setXAppConnectionManager(
       _xAppConnectionManager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -312,6 +337,11 @@ export class ERC721Router extends BaseContract {
     _tokenId: BigNumberish,
     _domain: BigNumberish,
     _recipient: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setTokenMapper(
+    __tokenMapper: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -383,6 +413,11 @@ export class ERC721Router extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setTokenMapper(
+      __tokenMapper: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setXAppConnectionManager(
       _xAppConnectionManager: string,
       overrides?: CallOverrides
@@ -397,6 +432,36 @@ export class ERC721Router extends BaseContract {
   };
 
   filters: {
+    "MapTokens(address,uint32,address,bool)"(
+      localToken?: null,
+      domain?: null,
+      remoteToken?: null,
+      isNative?: null
+    ): TypedEventFilter<
+      [string, number, string, boolean],
+      {
+        localToken: string;
+        domain: number;
+        remoteToken: string;
+        isNative: boolean;
+      }
+    >;
+
+    MapTokens(
+      localToken?: null,
+      domain?: null,
+      remoteToken?: null,
+      isNative?: null
+    ): TypedEventFilter<
+      [string, number, string, boolean],
+      {
+        localToken: string;
+        domain: number;
+        remoteToken: string;
+        isNative: boolean;
+      }
+    >;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -469,6 +534,11 @@ export class ERC721Router extends BaseContract {
       _tokenId: BigNumberish,
       _domain: BigNumberish,
       _recipient: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setTokenMapper(
+      __tokenMapper: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -546,6 +616,11 @@ export class ERC721Router extends BaseContract {
       _tokenId: BigNumberish,
       _domain: BigNumberish,
       _recipient: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setTokenMapper(
+      __tokenMapper: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

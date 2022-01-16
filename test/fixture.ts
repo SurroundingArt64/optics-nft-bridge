@@ -1,3 +1,4 @@
+import { HardhatEthersHelpers } from "@nomiclabs/hardhat-ethers/types";
 import { deployments } from "hardhat";
 import { ERC721Router, Native721, NonNative721 } from "../typechain";
 
@@ -11,15 +12,15 @@ export const setupTest = deployments.createFixture(
 			}
 		);
 
-		const data = await deployments.all();
-
-		const { deployer } = await getNamedAccounts();
+		const { deployer, tokenMapper } = await getNamedAccounts();
 		const NonNative721 = await ethers.getContract("NonNative721");
 		const Native721 = await ethers.getContract("Native721");
 		const ERC721RemoteRouter = await ethers.getContract(
 			"ERC721RemoteRouter"
 		);
 		const ERC721LocalRouter = await ethers.getContract("ERC721LocalRouter");
+		const MockHome = await ethers.getContract("MockHome");
+
 		return {
 			deployer: {
 				address: deployer,
@@ -27,7 +28,36 @@ export const setupTest = deployments.createFixture(
 				ERC721LocalRouter: ERC721LocalRouter as ERC721Router,
 				NonNative721: NonNative721 as NonNative721,
 				Native721: Native721 as Native721,
+				MockHome,
+			},
+			tokenMapper: {
+				address: tokenMapper,
+				contracts: await getContracts(tokenMapper, ethers),
 			},
 		};
 	}
 );
+
+const getContracts = async (
+	address: string,
+	ethers: typeof import("ethers/lib/ethers") & HardhatEthersHelpers
+) => {
+	const signer = await ethers.getSigner(address);
+	const NonNative721 = await ethers.getContract("NonNative721", signer);
+	const Native721 = await ethers.getContract("Native721", signer);
+	const ERC721RemoteRouter = await ethers.getContract(
+		"ERC721RemoteRouter",
+		signer
+	);
+	const ERC721LocalRouter = await ethers.getContract(
+		"ERC721LocalRouter",
+		signer
+	);
+
+	return {
+		ERC721RemoteRouter: ERC721RemoteRouter as ERC721Router,
+		ERC721LocalRouter: ERC721LocalRouter as ERC721Router,
+		NonNative721: NonNative721 as NonNative721,
+		Native721: Native721 as Native721,
+	};
+};

@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -22,17 +21,12 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface ERC721RegistryInterface extends ethers.utils.Interface {
   functions: {
     "localTokenData(address)": FunctionFragment;
-    "mapTokens(address,uint32,address,bool)": FunctionFragment;
     "remoteTokenIds(address,uint32)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "localTokenData",
     values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mapTokens",
-    values: [string, BigNumberish, string, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "remoteTokenIds",
@@ -43,7 +37,6 @@ interface ERC721RegistryInterface extends ethers.utils.Interface {
     functionFragment: "localTokenData",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mapTokens", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "remoteTokenIds",
     data: BytesLike
@@ -101,14 +94,6 @@ export class ERC721Registry extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean] & { isNative: boolean }>;
 
-    mapTokens(
-      localToken: string,
-      domain: BigNumberish,
-      remoteToken: string,
-      isNative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     remoteTokenIds(
       arg0: string,
       arg1: BigNumberish,
@@ -118,14 +103,6 @@ export class ERC721Registry extends BaseContract {
 
   localTokenData(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
-  mapTokens(
-    localToken: string,
-    domain: BigNumberish,
-    remoteToken: string,
-    isNative: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   remoteTokenIds(
     arg0: string,
     arg1: BigNumberish,
@@ -134,14 +111,6 @@ export class ERC721Registry extends BaseContract {
 
   callStatic: {
     localTokenData(arg0: string, overrides?: CallOverrides): Promise<boolean>;
-
-    mapTokens(
-      localToken: string,
-      domain: BigNumberish,
-      remoteToken: string,
-      isNative: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     remoteTokenIds(
       arg0: string,
@@ -155,14 +124,6 @@ export class ERC721Registry extends BaseContract {
   estimateGas: {
     localTokenData(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    mapTokens(
-      localToken: string,
-      domain: BigNumberish,
-      remoteToken: string,
-      isNative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     remoteTokenIds(
       arg0: string,
       arg1: BigNumberish,
@@ -174,14 +135,6 @@ export class ERC721Registry extends BaseContract {
     localTokenData(
       arg0: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    mapTokens(
-      localToken: string,
-      domain: BigNumberish,
-      remoteToken: string,
-      isNative: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     remoteTokenIds(

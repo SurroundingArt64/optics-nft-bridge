@@ -33,34 +33,6 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "localToken",
-        type: "address",
-      },
-      {
-        internalType: "uint32",
-        name: "domain",
-        type: "uint32",
-      },
-      {
-        internalType: "address",
-        name: "remoteToken",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "isNative",
-        type: "bool",
-      },
-    ],
-    name: "mapTokens",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
         name: "",
         type: "address",
       },

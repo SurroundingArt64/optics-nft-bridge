@@ -2,7 +2,14 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
+import {
+  Signer,
+  utils,
+  BigNumberish,
+  Contract,
+  ContractFactory,
+  Overrides,
+} from "ethers";
 import { Provider, TransactionRequest } from "@ethersproject/providers";
 import type {
   MockXAppConnectionManager,
@@ -16,6 +23,11 @@ const _abi = [
         internalType: "address",
         name: "_home",
         type: "address",
+      },
+      {
+        internalType: "uint32",
+        name: "__localDomain",
+        type: "uint32",
       },
     ],
     stateMutability: "nonpayable",
@@ -34,10 +46,23 @@ const _abi = [
     stateMutability: "view",
     type: "function",
   },
+  {
+    inputs: [],
+    name: "localDomain",
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
 const _bytecode =
-  "0x608060405234801561001057600080fd5b5060405161014c38038061014c8339818101604052602081101561003357600080fd5b8101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505060b9806100936000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80639fa92f9d14602d575b600080fd5b6033605f565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea2646970667358221220024a4145bb38f394b5c1161f186151908dc208bf54d7b5f8734f38d028c6e8e864736f6c63430007060033";
+  "0x608060405234801561001057600080fd5b5060405161019c38038061019c8339818101604052604081101561003357600080fd5b810190808051906020019092919080519060200190929190505050816000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550505060fe8061009e6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c80638d3638f41460375780639fa92f9d146059575b600080fd5b603d608b565b604051808263ffffffff16815260200191505060405180910390f35b605f60a4565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60008060149054906101000a900463ffffffff16905090565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea2646970667358221220afd3ff836c2b1fe11d82323a6f9928ddfdfc7c73f5e694b54a059927e175607464736f6c63430007060033";
 
 export class MockXAppConnectionManager__factory extends ContractFactory {
   constructor(
@@ -52,18 +77,21 @@ export class MockXAppConnectionManager__factory extends ContractFactory {
 
   deploy(
     _home: string,
+    __localDomain: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<MockXAppConnectionManager> {
     return super.deploy(
       _home,
+      __localDomain,
       overrides || {}
     ) as Promise<MockXAppConnectionManager>;
   }
   getDeployTransaction(
     _home: string,
+    __localDomain: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): TransactionRequest {
-    return super.getDeployTransaction(_home, overrides || {});
+    return super.getDeployTransaction(_home, __localDomain, overrides || {});
   }
   attach(address: string): MockXAppConnectionManager {
     return super.attach(address) as MockXAppConnectionManager;

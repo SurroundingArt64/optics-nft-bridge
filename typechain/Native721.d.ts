@@ -27,6 +27,7 @@ interface Native721Interface extends ethers.utils.Interface {
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint()": FunctionFragment;
+    "mintBatch(uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
@@ -55,6 +56,10 @@ interface Native721Interface extends ethers.utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(functionFragment: "mint", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "mintBatch",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
@@ -106,6 +111,7 @@ interface Native721Interface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintBatch", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -239,6 +245,11 @@ export class Native721 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    mintBatch(
+      tokenIds: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     ownerOf(
@@ -325,6 +336,11 @@ export class Native721 extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  mintBatch(
+    tokenIds: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
@@ -402,6 +418,8 @@ export class Native721 extends BaseContract {
     ): Promise<boolean>;
 
     mint(overrides?: CallOverrides): Promise<void>;
+
+    mintBatch(tokenIds: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -540,6 +558,11 @@ export class Native721 extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    mintBatch(
+      tokenIds: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     ownerOf(
@@ -627,6 +650,11 @@ export class Native721 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mint(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mintBatch(
+      tokenIds: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

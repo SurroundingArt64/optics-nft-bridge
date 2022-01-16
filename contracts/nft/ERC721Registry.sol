@@ -23,15 +23,4 @@ abstract contract ERC721Registry is Initializable {
 	// address is local address and TokenId contains data like:
 	// mapped to and on chain address
 	mapping(address => mapping(uint32 => address)) public remoteTokenIds;
-
-	function mapTokens(
-		address localToken,
-		uint32 domain,
-		address remoteToken,
-		bool isNative
-	) external {
-		require(msg.sender == _tokenMapper);
-		remoteTokenIds[localToken][domain] = remoteToken;
-		localTokenData[localToken].isNative = isNative;
-	}
 }
