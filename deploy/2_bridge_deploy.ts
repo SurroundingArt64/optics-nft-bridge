@@ -7,8 +7,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 	const { deployer, tokenMapper } = await getNamedAccounts();
 
-	const XAppConnectionManagerAddress = (await deployments.getOrNull(
-		"MockXAppConnectionManager"
+	const XAppConnectionManagerLocalAddress = (await deployments.getOrNull(
+		"MockXAppConnectionManagerLocal"
+	))!.address;
+
+	const XAppConnectionManagerRemoteAddress = (await deployments.getOrNull(
+		"MockXAppConnectionManagerRemote"
 	))!.address;
 
 	const LocalRouter = await deploy("ERC721LocalRouter", {
@@ -21,7 +25,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 			execute: {
 				init: {
 					methodName: "initialize",
-					args: [XAppConnectionManagerAddress, tokenMapper],
+					args: [XAppConnectionManagerLocalAddress, tokenMapper],
 				},
 			},
 			proxyContract: "OptimizedTransparentProxy",
@@ -39,7 +43,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 			execute: {
 				init: {
 					methodName: "initialize",
-					args: [XAppConnectionManagerAddress, tokenMapper],
+					args: [XAppConnectionManagerRemoteAddress, tokenMapper],
 				},
 			},
 			proxyContract: "OptimizedTransparentProxy",

@@ -14,6 +14,13 @@ import {IERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract ERC721Router is ERC721Registry, Router {
 	uint256[49] private __GAP;
 
+	event MapTokens(
+		address localToken,
+		uint32 domain,
+		address remoteToken,
+		bool isNative
+	);
+
 	function initialize(address _xAppConnectionManager, address __tokenMapper)
 		public
 		initializer
@@ -26,7 +33,7 @@ contract ERC721Router is ERC721Registry, Router {
 		external
 		onlyOwner
 	{
-		enrollRemoteRouter(_domain, bytes32(uint256(uint160(_router)) << 96));
+		enrollRemoteRouter(_domain, bytes32(uint256(uint160(_router))));
 	}
 
 	function handle(
@@ -126,5 +133,25 @@ contract ERC721Router is ERC721Registry, Router {
 				ERC721Message.ActionType.Transfer
 			)
 		);
+	}
+
+	function mapTokens(
+		address localToken,
+		uint32 domain,
+		address remoteToken,
+		bool isNative
+	) external {
+		require(msg.sender == _tokenMapper, "Only token mapper can map tokens");
+
+		// check if router exists for domain
+		_mustHaveRemote(domain);
+
+		remoteTokenIds[localToken][domain] = remoteToken;
+		localTokenData[localToken].isNative = isNative;
+		emit MapTokens(localToken, domain, remoteToken, isNative);
+	}
+
+	function setTokenMapper(address __tokenMapper) external onlyOwner {
+		_tokenMapper = __tokenMapper;
 	}
 }

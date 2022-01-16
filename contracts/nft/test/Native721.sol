@@ -12,4 +12,10 @@ contract Native721 is ERC721 {
 	function mint() public {
 		_mint(msg.sender, counter++);
 	}
+
+	function mintBatch(uint256 tokenIds) public {
+		for (uint256 index = 0; index < tokenIds; index++) {
+			mint();
+		}
+	}
 }

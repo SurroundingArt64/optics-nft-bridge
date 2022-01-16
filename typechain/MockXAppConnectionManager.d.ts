@@ -21,11 +21,20 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface MockXAppConnectionManagerInterface extends ethers.utils.Interface {
   functions: {
     "home()": FunctionFragment;
+    "localDomain()": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "home", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "localDomain",
+    values?: undefined
+  ): string;
 
   decodeFunctionResult(functionFragment: "home", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "localDomain",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -75,21 +84,31 @@ export class MockXAppConnectionManager extends BaseContract {
 
   functions: {
     home(overrides?: CallOverrides): Promise<[string]>;
+
+    localDomain(overrides?: CallOverrides): Promise<[number]>;
   };
 
   home(overrides?: CallOverrides): Promise<string>;
 
+  localDomain(overrides?: CallOverrides): Promise<number>;
+
   callStatic: {
     home(overrides?: CallOverrides): Promise<string>;
+
+    localDomain(overrides?: CallOverrides): Promise<number>;
   };
 
   filters: {};
 
   estimateGas: {
     home(overrides?: CallOverrides): Promise<BigNumber>;
+
+    localDomain(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     home(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    localDomain(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

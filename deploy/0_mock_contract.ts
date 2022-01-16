@@ -15,11 +15,21 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 		skipIfAlreadyDeployed: true,
 	});
 
-	await deploy("MockXAppConnectionManager", {
+	const localDomain = 0;
+	const remoteDomain = 1;
+
+	await deploy("MockXAppConnectionManagerLocal", {
 		from: deployer,
 		log: true,
 		contract: "MockXAppConnectionManager",
-		args: [Home.address],
+		args: [Home.address, localDomain],
+		skipIfAlreadyDeployed: true,
+	});
+	await deploy("MockXAppConnectionManagerRemote", {
+		from: deployer,
+		log: true,
+		contract: "MockXAppConnectionManager",
+		args: [Home.address, remoteDomain],
 		skipIfAlreadyDeployed: true,
 	});
 };
