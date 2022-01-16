@@ -3,7 +3,9 @@
 Project Structure:
 
 .-
+
 ---`optics-monorepo`: https://github.com/celo-org/optics-monorepo/
+
 ---`optics-nft-bridge`: https://github.com/SurroundingArt64/optics-nft-bridge
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
