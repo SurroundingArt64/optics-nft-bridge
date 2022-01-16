@@ -9,4 +9,15 @@ contract NonNative721 is Native721, IERC721NonNative {
 	constructor(string memory _name, string memory _symbol)
 		Native721(_name, _symbol)
 	{}
+
+	function mint() public virtual override {
+		require(false, "cannot mint on this chain without a bridge");
+	}
+
+	function mintBatch(uint256 tokenIds) public virtual override {
+		require(
+			false && tokenIds >= 0,
+			"cannot mint on this chain without a bridge"
+		);
+	}
 }
