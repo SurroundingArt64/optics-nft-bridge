@@ -46,7 +46,10 @@ const config: HardhatUserConfig = {
 			default: 0,
 		},
 		upgradeAdmin: {
-			default: 0,
+			default: 1,
+		},
+		tokenMapper: {
+			default: 2,
 		},
 	},
 };

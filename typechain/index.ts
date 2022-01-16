@@ -25,6 +25,8 @@ export type { ERC721Router } from "./ERC721Router";
 export type { IERC721NonNative } from "./IERC721NonNative";
 export type { MockHome } from "./MockHome";
 export type { MockXAppConnectionManager } from "./MockXAppConnectionManager";
+export type { Native721 } from "./Native721";
+export type { NonNative721 } from "./NonNative721";
 export type { Router } from "./Router";
 export type { XAppConnectionClient } from "./XAppConnectionClient";
 
@@ -52,5 +54,7 @@ export { ERC721Router__factory } from "./factories/ERC721Router__factory";
 export { IERC721NonNative__factory } from "./factories/IERC721NonNative__factory";
 export { MockHome__factory } from "./factories/MockHome__factory";
 export { MockXAppConnectionManager__factory } from "./factories/MockXAppConnectionManager__factory";
+export { Native721__factory } from "./factories/Native721__factory";
+export { NonNative721__factory } from "./factories/NonNative721__factory";
 export { Router__factory } from "./factories/Router__factory";
 export { XAppConnectionClient__factory } from "./factories/XAppConnectionClient__factory";
