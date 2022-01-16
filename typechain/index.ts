@@ -23,6 +23,8 @@ export type { TypedMemView } from "./TypedMemView";
 export type { ERC721Registry } from "./ERC721Registry";
 export type { ERC721Router } from "./ERC721Router";
 export type { IERC721NonNative } from "./IERC721NonNative";
+export type { MockHome } from "./MockHome";
+export type { MockXAppConnectionManager } from "./MockXAppConnectionManager";
 export type { Router } from "./Router";
 export type { XAppConnectionClient } from "./XAppConnectionClient";
 
@@ -48,5 +50,7 @@ export { TypedMemView__factory } from "./factories/TypedMemView__factory";
 export { ERC721Registry__factory } from "./factories/ERC721Registry__factory";
 export { ERC721Router__factory } from "./factories/ERC721Router__factory";
 export { IERC721NonNative__factory } from "./factories/IERC721NonNative__factory";
+export { MockHome__factory } from "./factories/MockHome__factory";
+export { MockXAppConnectionManager__factory } from "./factories/MockXAppConnectionManager__factory";
 export { Router__factory } from "./factories/Router__factory";
 export { XAppConnectionClient__factory } from "./factories/XAppConnectionClient__factory";
