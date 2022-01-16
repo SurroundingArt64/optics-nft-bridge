@@ -12,6 +12,8 @@ import {IERC721NonNative} from "./IERC721NonNative.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract ERC721Router is ERC721Registry, Router {
+	uint256[49] private __GAP;
+
 	function initialize(address _xAppConnectionManager, address __tokenMapper)
 		public
 		initializer
@@ -20,16 +22,11 @@ contract ERC721Router is ERC721Registry, Router {
 		_tokenMapper = __tokenMapper;
 	}
 
-	/**
-	 * @return domain of chain on which the contract is deployed
-	 */
-	function _localDomain()
-		internal
-		view
-		override(XAppConnectionClient)
-		returns (uint32)
+	function enrollRemoteRouterByAddress(uint32 _domain, address _router)
+		external
+		onlyOwner
 	{
-		return XAppConnectionClient._localDomain();
+		enrollRemoteRouter(_domain, bytes32(uint256(uint160(_router)) << 96));
 	}
 
 	function handle(
