@@ -10,6 +10,11 @@ abstract contract IERC721NonNative is ERC721, Ownable {
 	address _localRouter;
 
 	// EXTERNAL
+
+	function setLocalRouter(address _router) public onlyOwner {
+		_localRouter = _router;
+	}
+
 	function handleExit(address to, uint256 tokenId) external onlyLocalRouter {
 		_mint(to, tokenId);
 	}
@@ -20,7 +25,10 @@ abstract contract IERC721NonNative is ERC721, Ownable {
 	}
 
 	modifier onlyLocalRouter() {
-		require(msg.sender == _localRouter);
+		require(
+			msg.sender == _localRouter,
+			"Only local router can call this function"
+		);
 		_;
 	}
 }

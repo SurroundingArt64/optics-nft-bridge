@@ -21,20 +21,26 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface MockXAppConnectionManagerInterface extends ethers.utils.Interface {
   functions: {
     "home()": FunctionFragment;
+    "isReplica(address)": FunctionFragment;
     "localDomain()": FunctionFragment;
+    "replica()": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "home", values?: undefined): string;
+  encodeFunctionData(functionFragment: "isReplica", values: [string]): string;
   encodeFunctionData(
     functionFragment: "localDomain",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "replica", values?: undefined): string;
 
   decodeFunctionResult(functionFragment: "home", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "isReplica", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "localDomain",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "replica", data: BytesLike): Result;
 
   events: {};
 }
@@ -85,17 +91,29 @@ export class MockXAppConnectionManager extends BaseContract {
   functions: {
     home(overrides?: CallOverrides): Promise<[string]>;
 
+    isReplica(_replica: string, overrides?: CallOverrides): Promise<[boolean]>;
+
     localDomain(overrides?: CallOverrides): Promise<[number]>;
+
+    replica(overrides?: CallOverrides): Promise<[string]>;
   };
 
   home(overrides?: CallOverrides): Promise<string>;
 
+  isReplica(_replica: string, overrides?: CallOverrides): Promise<boolean>;
+
   localDomain(overrides?: CallOverrides): Promise<number>;
+
+  replica(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
     home(overrides?: CallOverrides): Promise<string>;
 
+    isReplica(_replica: string, overrides?: CallOverrides): Promise<boolean>;
+
     localDomain(overrides?: CallOverrides): Promise<number>;
+
+    replica(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {};
@@ -103,12 +121,23 @@ export class MockXAppConnectionManager extends BaseContract {
   estimateGas: {
     home(overrides?: CallOverrides): Promise<BigNumber>;
 
+    isReplica(_replica: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     localDomain(overrides?: CallOverrides): Promise<BigNumber>;
+
+    replica(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     home(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    isReplica(
+      _replica: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     localDomain(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    replica(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

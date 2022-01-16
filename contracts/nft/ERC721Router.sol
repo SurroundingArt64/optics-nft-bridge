@@ -8,7 +8,7 @@ import {Home} from "@celo-org/optics-sol/contracts/Home.sol";
 import {XAppConnectionClient} from "../XAppConnectionClient.sol";
 import {ERC721Registry} from "./ERC721Registry.sol";
 import {IERC721NonNative} from "./IERC721NonNative.sol";
-
+import "hardhat/console.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract ERC721Router is ERC721Registry, Router {
@@ -49,13 +49,14 @@ contract ERC721Router is ERC721Registry, Router {
 			address localToken,
 			address recipient,
 			uint256 tokenId,
-			ERC721Message.ActionType actionType
+			uint8 actionType
 		) = ERC721Message.decodeMessage(_message);
 		require(
-			actionType != ERC721Message.ActionType.Invalid,
+			ERC721Message.ActionType(actionType) !=
+				ERC721Message.ActionType.Invalid,
 			"Invalid action type"
 		);
-
+		console.log(localDomain, _localDomain());
 		// check if details are correct
 		require(localDomain == _localDomain(), "Invalid domain");
 		require(
@@ -130,7 +131,7 @@ contract ERC721Router is ERC721Registry, Router {
 				_remoteToken,
 				_recipient,
 				_tokenId,
-				ERC721Message.ActionType.Transfer
+				uint8(ERC721Message.ActionType.Transfer)
 			)
 		);
 	}

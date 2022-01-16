@@ -352,6 +352,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "_router",
+        type: "address",
+      },
+    ],
+    name: "setLocalRouter",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "bytes4",
         name: "interfaceId",
         type: "bytes4",

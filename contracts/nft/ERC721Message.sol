@@ -15,7 +15,7 @@ library ERC721Message {
 		address remoteToken,
 		address recipient,
 		uint256 tokenId,
-		ActionType actionType
+		uint8 actionType
 	) internal pure returns (bytes memory) {
 		return
 			abi.encode(
@@ -41,7 +41,7 @@ library ERC721Message {
 			address localToken,
 			address recipient,
 			uint256 tokenId,
-			ActionType actionType
+			uint8 actionType
 		)
 	{
 		(
@@ -54,7 +54,7 @@ library ERC721Message {
 			actionType
 		) = abi.decode(
 			data,
-			(address, uint32, uint32, address, address, uint256, ActionType)
+			(address, uint32, uint32, address, address, uint256, uint8)
 		);
 	}
 }

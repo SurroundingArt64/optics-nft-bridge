@@ -51,6 +51,9 @@ const config: HardhatUserConfig = {
 		tokenMapper: {
 			default: 2,
 		},
+		replica: {
+			default: 3,
+		},
 	},
 };
 
