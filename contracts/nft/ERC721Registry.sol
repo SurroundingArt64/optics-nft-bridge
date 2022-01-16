@@ -5,17 +5,33 @@ import "./ERC721Message.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/Initializable.sol";
 
 abstract contract ERC721Registry is Initializable {
-	using TypedMemView for bytes;
-	using TypedMemView for bytes29;
-	using ERC721Message for bytes29;
+	using ERC721Message for bytes;
+	address _tokenMapper;
+	struct LocalTokenData {
+		// check if token is native. If native, it is not mint-able
+		// only transferred to registry.
+		bool isNative;
+		// check if token is transferred to registry
+		mapping(uint256 => bool) isTransferred;
+	}
+	// TokenData
+	mapping(address => LocalTokenData) public localTokenData;
 
 	// local representation local token address => mapping address => token ID
 	// These are mapped tokens by my understanding.
 	// Owner or the governance contract can add tokens to this mapping.
 	// address is local address and TokenId contains data like:
 	// mapped to and on chain address
-	mapping(address => mapping(uint32 => bytes32))
-		public representationToCanonical;
+	mapping(address => mapping(uint32 => address)) public remoteTokenIds;
 
-	mapping(bytes32 => address) public canonicalToRepresentation;
+	function mapTokens(
+		address localToken,
+		uint32 domain,
+		address remoteToken,
+		bool isNative
+	) external {
+		require(msg.sender == _tokenMapper);
+		remoteTokenIds[localToken][domain] = remoteToken;
+		localTokenData[localToken].isNative = isNative;
+	}
 }
