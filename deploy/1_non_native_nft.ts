@@ -19,3 +19,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 func.tags = ["NonNative721"];
 func.skip = skipUnlessNonNative;
+export default func;
