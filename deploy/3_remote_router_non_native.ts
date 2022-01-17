@@ -9,17 +9,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 	const { deploy, execute, read } = deployments;
 
 	const { deployer, tokenMapper } = await getNamedAccounts();
-	const nativeData =
+	const kovanData =
 		contracts[
 			network.config!.chainId!.toString() as keyof typeof contracts
 		];
-	const nonNativeData =
+	const rinkebyData =
 		contracts[
 			(await companionNetworks[
 				"Native"
 			].getChainId()) as keyof typeof contracts
 		];
-	console.log({ localData: nativeData, remoteData: nonNativeData });
+	console.log({ kovanData: kovanData, rinkebyData: rinkebyData });
 	const ERC721LocalRouter = await companionNetworks[
 		"Native"
 	].deployments.getOrNull("ERC721LocalRouter");
@@ -51,7 +51,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 			execute: {
 				init: {
 					methodName: "initialize",
-					args: [nativeData.xAppConnectionManager, tokenMapper],
+					args: [kovanData.xAppConnectionManager, tokenMapper],
 				},
 			},
 			proxyContract: "OptimizedTransparentProxy",
@@ -60,88 +60,88 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 		skipIfAlreadyDeployed: true,
 	});
 
-	const isRemoteSetOnRemote = await read(
+	const isRemoteSetOnKovan = await read(
 		"ERC721RemoteRouter",
 		{ from: deployer },
 		"remotes",
-		nativeData.localDomain
+		rinkebyData.localDomain
 	);
 
-	const isRemoteSetOnLocal = await companionNetworks[
+	if (parseInt(isRemoteSetOnKovan) === 0) {
+		await execute(
+			"ERC721RemoteRouter",
+			{ from: deployer, log: true },
+			"enrollRemoteRouterByAddress",
+			rinkebyData.localDomain,
+			ERC721LocalRouter!.address
+		);
+	}
+
+	const isRemoteSetOnRinkeby = await companionNetworks[
 		"Native"
 	].deployments.read(
 		"ERC721LocalRouter",
 		{ from: deployer },
 		"remotes",
-		nonNativeData.localDomain
+		kovanData.localDomain
 	);
 
-	if (parseInt(isRemoteSetOnRemote) === 0) {
-		await execute(
-			"ERC721RemoteRouter",
-			{ from: deployer, log: true },
-			"enrollRemoteRouterByAddress",
-			nonNativeData.localDomain,
-			ERC721LocalRouter!.address
-		);
-	}
-
-	if (parseInt(isRemoteSetOnLocal) === 0) {
+	if (parseInt(isRemoteSetOnRinkeby) === 0) {
 		await companionNetworks["Native"].deployments.execute(
 			"ERC721LocalRouter",
 			{ from: deployer, log: true },
 			"enrollRemoteRouterByAddress",
-			nativeData.localDomain,
+			kovanData.localDomain,
 			ERC721RemoteRouter!.address
 		);
 	}
 
-	const isTokenMappedOnNative = await companionNetworks[
+	const isTokenMappedOnRinkeby = await companionNetworks[
 		"Native"
 	].deployments.read(
 		"ERC721LocalRouter",
 		{ from: deployer },
 		"remoteTokenIds",
 		Native721?.address,
-		nativeData.localDomain
+		kovanData.localDomain
 	);
 
 	console.log({
-		nonNativeData: nonNativeData,
-		nativeData: nativeData,
+		nonNativeData: rinkebyData,
+		nativeData: kovanData,
 		native: Native721.address,
 		nonNative: NonNative721?.address,
 	});
 
-	if (parseInt(isTokenMappedOnNative) === 0) {
+	if (parseInt(isTokenMappedOnRinkeby) === 0) {
 		await companionNetworks["Native"].deployments.execute(
 			"ERC721LocalRouter",
 			{ from: tokenMapper, log: true },
 			"mapTokens",
 			Native721.address,
-			nativeData.localDomain,
+			kovanData.localDomain,
 			NonNative721?.address,
 			true
 		);
 	}
 
-	const isTokenMappedOnNonNative = await read(
+	const isTokenMappedOnKovan = await read(
 		"ERC721RemoteRouter",
 		{ from: deployer },
 		"remoteTokenIds",
 		NonNative721?.address,
-		nonNativeData.localDomain
+		rinkebyData.localDomain
 	);
 
-	if (parseInt(isTokenMappedOnNonNative) === 0) {
+	if (parseInt(isTokenMappedOnKovan) === 0) {
 		await execute(
 			"ERC721RemoteRouter",
 			{ from: tokenMapper, log: true },
 			"mapTokens",
 			NonNative721?.address,
-			nonNativeData.localDomain,
+			rinkebyData.localDomain,
 			Native721?.address,
-			true
+			false
 		);
 	}
 };
