@@ -8,6 +8,7 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import { readFileSync } from "fs";
+import { ethers } from "ethers";
 
 dotenv.config();
 
@@ -49,6 +50,7 @@ const config: HardhatUserConfig = {
 			companionNetworks: {
 				NonNative: "kovan",
 			},
+			gasPrice: 2_000_000_000,
 			accounts: process.env.PRIVATE_KEY !== undefined ? accounts() : [],
 		},
 		kovan: {

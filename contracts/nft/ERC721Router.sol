@@ -6,12 +6,31 @@ import {ERC721Message} from "./ERC721Message.sol";
 import {Router} from "../Router.sol";
 import {Home} from "@celo-org/optics-sol/contracts/Home.sol";
 import {XAppConnectionClient} from "../XAppConnectionClient.sol";
-import {ERC721Registry} from "./ERC721Registry.sol";
 import {IERC721NonNative} from "./IERC721NonNative.sol";
 import "hardhat/console.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract ERC721Router is ERC721Registry, Router {
+import "./ERC721Message.sol";
+
+contract ERC721Router is Router {
+	address _tokenMapper;
+	struct LocalTokenData {
+		// check if token is native. If native, it is not mint-able
+		// only transferred to registry.
+		bool isNative;
+		// check if token is transferred to registry
+		mapping(uint256 => bool) isTransferred;
+	}
+	// TokenData
+	mapping(address => LocalTokenData) public localTokenData;
+
+	// local representation local token address => mapping address => token ID
+	// These are mapped tokens by my understanding.
+	// Owner or the governance contract can add tokens to this mapping.
+	// address is local address and TokenId contains data like:
+	// mapped to and on chain address
+	mapping(address => mapping(uint32 => address)) public remoteTokenIds;
+
 	uint256[49] private __GAP;
 
 	event MapTokens(
