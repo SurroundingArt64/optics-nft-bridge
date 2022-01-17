@@ -7,6 +7,7 @@ import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import { readFileSync } from "fs";
 
 dotenv.config();
 
@@ -20,6 +21,12 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 	}
 });
 
+const accounts = () => {
+	const priv = readFileSync(process.env.PRIVATE_KEY as string, "utf8")
+		.toString()
+		.trim();
+	return [priv];
+};
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
@@ -28,20 +35,30 @@ const config: HardhatUserConfig = {
 	networks: {
 		ropsten: {
 			url: process.env.ROPSTEN_URL || "",
-			accounts:
-				process.env.PRIVATE_KEY !== undefined
-					? [process.env.PRIVATE_KEY]
-					: [],
+			accounts: process.env.PRIVATE_KEY !== undefined ? accounts() : [],
+			companionNetworks: {
+				l1: "hardhat",
+				l2: "hardhat",
+			},
+			tags: ["Native", "NonNative`"],
 		},
 		rinkeby: {
 			url: process.env.RINKEBY_URL || "",
 			tags: ["Native"],
 			chainId: 4,
+			companionNetworks: {
+				NonNative: "kovan",
+			},
+			accounts: process.env.PRIVATE_KEY !== undefined ? accounts() : [],
 		},
 		kovan: {
 			url: process.env.KOVAN_URL || "",
 			tags: ["NonNative"],
 			chainId: 42,
+			companionNetworks: {
+				Native: "rinkeby",
+			},
+			accounts: process.env.PRIVATE_KEY !== undefined ? accounts() : [],
 		},
 	},
 	gasReporter: {
@@ -57,12 +74,18 @@ const config: HardhatUserConfig = {
 		},
 		upgradeAdmin: {
 			default: 1,
+			4: 0,
+			42: 0,
 		},
 		tokenMapper: {
 			default: 2,
+			4: 0,
+			42: 0,
 		},
 		replica: {
 			default: 3,
+			4: 0,
+			42: 0,
 		},
 	},
 };
