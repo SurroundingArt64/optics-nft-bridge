@@ -33,6 +33,16 @@ const config: HardhatUserConfig = {
 					? [process.env.PRIVATE_KEY]
 					: [],
 		},
+		rinkeby: {
+			url: process.env.RINKEBY_URL || "",
+			tags: ["Native"],
+			chainId: 4,
+		},
+		kovan: {
+			url: process.env.KOVAN_URL || "",
+			tags: ["NonNative"],
+			chainId: 42,
+		},
 	},
 	gasReporter: {
 		enabled: process.env.REPORT_GAS !== undefined,

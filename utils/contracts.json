@@ -1,0 +1,10 @@
+{
+	"4": {
+		"xAppConnectionManager": "0x53B94f2D4a3159b66fcCC4f406Ea388426A3f3cB",
+		"localDomain": 2000
+	},
+	"42": {
+		"xAppConnectionManager": "0x1d9Af80594930574201d919Af0fBfe6bb89800E2",
+		"localDomain": 3000
+	}
+}
