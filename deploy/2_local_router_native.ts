@@ -5,7 +5,7 @@ import contracts from "../utils/contracts.json";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 	const { deployments, getNamedAccounts, network, companionNetworks } = hre;
-	const { deploy, execute } = deployments;
+	const { deploy, execute, read } = deployments;
 
 	const { deployer, tokenMapper } = await getNamedAccounts();
 	const localData =
@@ -52,16 +52,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 		args: [],
 		skipIfAlreadyDeployed: true,
 	});
-
-	await execute(
-		"ERC721LocalRouter",
-		{ from: tokenMapper },
-		"mapTokens",
-		Native721!.address,
-		remoteData.localDomain,
-		NonNative721!.address,
-		true
-	);
 };
 
 export default func;
