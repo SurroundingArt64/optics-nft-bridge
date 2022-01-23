@@ -81,6 +81,12 @@ export async function skipUnlessTestOrL2(
 	return !isTest(hre) || !isInTags(hre, "L2");
 }
 
+export async function skipUnlessTestOrOpticsCore(
+	hre: HardhatRuntimeEnvironment
+): Promise<boolean> {
+	return !isTest(hre) || !isInTags(hre, "OpticsCore");
+}
+
 export async function skipUnlessTestnet(
 	hre: HardhatRuntimeEnvironment
 ): Promise<boolean> {
