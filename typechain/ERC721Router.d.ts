@@ -149,13 +149,19 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "DispatchFrom721(bytes32,bytes)": EventFragment;
     "MapTokens(address,uint32,address,bool)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "DispatchFrom721"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MapTokens"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
+
+export type DispatchFrom721Event = TypedEvent<
+  [string, string] & { messageHash: string; messageBody: string }
+>;
 
 export type MapTokensEvent = TypedEvent<
   [string, number, string, boolean] & {
@@ -459,6 +465,22 @@ export class ERC721Router extends BaseContract {
   };
 
   filters: {
+    "DispatchFrom721(bytes32,bytes)"(
+      messageHash?: null,
+      messageBody?: null
+    ): TypedEventFilter<
+      [string, string],
+      { messageHash: string; messageBody: string }
+    >;
+
+    DispatchFrom721(
+      messageHash?: null,
+      messageBody?: null
+    ): TypedEventFilter<
+      [string, string],
+      { messageHash: string; messageBody: string }
+    >;
+
     "MapTokens(address,uint32,address,bool)"(
       localToken?: null,
       domain?: null,

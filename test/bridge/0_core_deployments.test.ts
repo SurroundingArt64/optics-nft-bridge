@@ -1,22 +1,16 @@
 import { expect, use } from "chai";
 import { solidity } from "ethereum-waffle";
-import { NetworkData, Networks, setupTest } from "./fixtures";
+import {
+	getNativeNetwork,
+	getNetworkByName,
+	getRemotes,
+	NetworkData,
+	setupTest,
+} from "./fixtures";
 
 use(solidity);
-describe("OpticsCore", () => {
+describe("OpticsCore - Deployments", () => {
 	let networks: NetworkData[];
-
-	const getNetworkByName = (name: keyof typeof Networks) => {
-		return networks.filter((elem) => elem.name === name)![0];
-	};
-
-	const getRemotes = (name: keyof typeof Networks) => {
-		return networks.filter((elem) => elem.name !== name);
-	};
-
-	const getNativeNetwork = () => {
-		return networks.filter((elem) => elem.native)![0];
-	};
 
 	before(async () => {
 		({ networks } = await setupTest());
@@ -59,14 +53,16 @@ describe("OpticsCore", () => {
 					).to.eq(local.localDomain);
 					expect(
 						(await replica.contract.remoteDomain()).toString()
-					).to.eq(getNetworkByName(replica.name).localDomain);
+					).to.eq(
+						getNetworkByName(networks, replica.name).localDomain
+					);
 				}
 			}
 		});
 
 		it("check routers", async () => {
 			for (const local of networks) {
-				const remotes = getRemotes(local.name);
+				const remotes = getRemotes(networks, local.name);
 				for (const remote of remotes) {
 					const remoteRouterByes32 =
 						await local.contracts.ERC721Router.remotes(
@@ -85,7 +81,7 @@ describe("OpticsCore", () => {
 
 		it("check token mappings", async () => {
 			for (const local of networks) {
-				const remotes = getRemotes(local.name);
+				const remotes = getRemotes(networks, local.name);
 				for (const remote of remotes) {
 					if (!(local.native || remote.native)) {
 						continue;
@@ -103,7 +99,9 @@ describe("OpticsCore", () => {
 								local.nonNativeContract.address,
 								remote.localDomain
 							)
-						).to.eq(getNativeNetwork().nativeContract.address);
+						).to.eq(
+							getNativeNetwork(networks).nativeContract.address
+						);
 					}
 				}
 			}
