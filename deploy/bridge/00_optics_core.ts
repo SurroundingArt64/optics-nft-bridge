@@ -1,10 +1,10 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { skipUnlessTestOrOpticsCore } from "../utils/network";
-import { ethers } from "hardhat";
+import { companionNetworks, ethers } from "hardhat";
+import { skipUnlessTestOrOpticsCore } from "../../utils/network";
 
 type NetworkData = {
-	hreObject: HardhatRuntimeEnvironment;
+	hreObject: typeof companionNetworks["1000"];
 	name: string;
 	localDomain: string | number;
 };
@@ -156,7 +156,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 		);
 
 		for (let remote of remotes) {
-			await deployUnenrolledReplica(local as any, remote as any);
+			await deployUnenrolledReplica(local, remote);
 		}
 	}
 
@@ -166,7 +166,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 		);
 
 		for (let remote of remotes) {
-			await enrollReplica(local as any, remote as any);
+			await enrollReplica(local, remote);
 		}
 	}
 };
