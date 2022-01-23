@@ -34,6 +34,30 @@ const accounts = () => {
 const config: HardhatUserConfig = {
 	solidity: "0.7.6",
 	networks: {
+		hardhat: {
+			companionNetworks: {
+				1000: "hardhat",
+				2000: "hardhat",
+				3000: "hardhat",
+			},
+			tags: ["OpticsCore"],
+		},
+		mumbai: {
+			url: process.env.POLYGON_MUMBAI_URL || "",
+			accounts: process.env.PRIVATE_KEY !== undefined ? accounts() : [],
+			companionNetworks: {
+				1000: "mumbai",
+				2000: "alfajores",
+				3000: "rinkeby",
+			},
+			chainId: 80001,
+			tags: ["OpticsCore"],
+		},
+		alfajores: {
+			url: process.env.ALFAJORES_URL || "",
+			accounts: process.env.PRIVATE_KEY !== undefined ? accounts() : [],
+			chainId: 44787,
+		},
 		ropsten: {
 			url: process.env.ROPSTEN_URL || "",
 			accounts: process.env.PRIVATE_KEY !== undefined ? accounts() : [],
@@ -78,16 +102,23 @@ const config: HardhatUserConfig = {
 			default: 1,
 			4: 0,
 			42: 0,
+			80001: 0,
+			44787: 0,
 		},
 		tokenMapper: {
 			default: 2,
 			4: 0,
 			42: 0,
+			80001: 0,
+			44787: 0,
 		},
-		replica: {
+
+		updater: {
 			default: 3,
-			4: 0,
-			42: 0,
+			4: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
+			42: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
+			80001: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
+			44787: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
 		},
 	},
 };
