@@ -115,6 +115,8 @@ contract ERC721Router is Router {
 		require(false, "Reached invalid-scenario.");
 	}
 
+	event DispatchFrom721(bytes32 messageHash, bytes messageBody);
+
 	/**
 	 * @notice Send tokens to a recipient on a remote chain
 	 * @param _token The token address
@@ -147,18 +149,22 @@ contract ERC721Router is Router {
 			localTokenData[_token].isTransferred[_tokenId] = true;
 		}
 
+		bytes memory messageBody = ERC721Message.encodeMessage(
+			_token,
+			_localDomain(),
+			_domain,
+			_remoteToken,
+			_recipient,
+			_tokenId,
+			uint8(ERC721Message.ActionType.Transfer)
+		);
+
+		emit DispatchFrom721(keccak256(messageBody), messageBody);
+
 		Home(xAppConnectionManager.home()).dispatch(
 			_domain,
 			_remote,
-			ERC721Message.encodeMessage(
-				_token,
-				_localDomain(),
-				_domain,
-				_remoteToken,
-				_recipient,
-				_tokenId,
-				uint8(ERC721Message.ActionType.Transfer)
-			)
+			messageBody
 		);
 	}
 

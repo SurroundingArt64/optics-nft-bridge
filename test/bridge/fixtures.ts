@@ -33,6 +33,7 @@ type replicaContractsInterface = [
 		contract: Replica;
 	}
 ];
+
 export type NetworkData = {
 	hreObject: typeof companionNetworks["1000"];
 	name: keyof typeof Networks;
@@ -42,6 +43,24 @@ export type NetworkData = {
 	nativeContract: Native721;
 	nonNativeContract: NonNative721;
 	native: boolean;
+};
+
+export const getNetworkByName = (
+	networks: NetworkData[],
+	name: keyof typeof Networks
+) => {
+	return networks.filter((elem) => elem.name === name)![0];
+};
+
+export const getRemotes = (
+	networks: NetworkData[],
+	name: keyof typeof Networks
+) => {
+	return networks.filter((elem) => elem.name !== name);
+};
+
+export const getNativeNetwork = (networks: NetworkData[]) => {
+	return networks.filter((elem) => elem.native)![0];
 };
 
 export const setupTest = deployments.createFixture(
