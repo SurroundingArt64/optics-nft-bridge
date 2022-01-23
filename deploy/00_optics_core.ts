@@ -1,8 +1,71 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { skipUnlessTestOrOpticsCore } from "../utils/network";
+import { ethers } from "hardhat";
 
-export async function deployUnenrolledReplica() {}
+type NetworkData = {
+	hreObject: HardhatRuntimeEnvironment;
+	name: string;
+	localDomain: string | number;
+};
+
+export async function deployUnenrolledReplica(
+	local: NetworkData,
+	remote: NetworkData
+) {
+	// Deploy the unenrolled replica
+	const replicaIdentifier =
+		local.name.toUpperCase() + "_" + remote.name.toUpperCase() + "_";
+	const { deploy } = local.hreObject.deployments;
+
+	const { deployer } = await local.hreObject.getNamedAccounts();
+
+	const { updater: remoteUpdater } =
+		await remote.hreObject.getNamedAccounts();
+
+	await deploy(replicaIdentifier + "Replica", {
+		from: deployer,
+		log: true,
+		skipIfAlreadyDeployed: true,
+		proxy: {
+			execute: {
+				init: {
+					methodName: "initialize",
+					args: [
+						remote.localDomain,
+						remoteUpdater,
+						ethers.constants.HashZero,
+						10,
+					],
+				},
+			},
+			proxyContract: "OptimizedTransparentProxy",
+		},
+		args: [local.localDomain, 1_000_000, 80_000],
+		contract: "Replica",
+	});
+}
+
+export async function enrollReplica(local: NetworkData, remote: NetworkData) {
+	const networkName = local.name.toUpperCase() + "_";
+	const { execute } = local.hreObject.deployments;
+
+	const { deployer } = await local.hreObject.getNamedAccounts();
+	const replicaIdentifier =
+		local.name.toUpperCase() + "_" + remote.name.toUpperCase() + "_";
+
+	await execute(
+		networkName + "XAppConnectionManager",
+		{ from: deployer, log: true },
+		"ownerEnrollReplica",
+		(
+			await local.hreObject.deployments.get(
+				replicaIdentifier + "Replica"
+			)!
+		).address,
+		remote.localDomain
+	);
+}
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 	const { companionNetworks } = hre;
@@ -85,6 +148,26 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 			"setHome",
 			Home.address
 		);
+	}
+
+	for (let local of networks) {
+		const remotes = networks.filter(
+			(network) => network.name !== local.name
+		);
+
+		for (let remote of remotes) {
+			await deployUnenrolledReplica(local as any, remote as any);
+		}
+	}
+
+	for (let local of networks) {
+		const remotes = networks.filter(
+			(network) => network.name !== local.name
+		);
+
+		for (let remote of remotes) {
+			await enrollReplica(local as any, remote as any);
+		}
 	}
 };
 
