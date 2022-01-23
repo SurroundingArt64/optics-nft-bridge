@@ -121,6 +121,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 		);
 
 		for (let remote of remotes) {
+			if (!(local.native || remote.native)) {
+				continue;
+			}
 			// set remote
 			const networkName = local.name.toUpperCase() + "_";
 			const remoteNetworkName = remote.name.toUpperCase() + "_";
@@ -135,6 +138,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 			const remoteToken = await remoteDeployments.get(
 				remoteNetworkName + "ERC721"
 			);
+
 			await execute(
 				networkName + "ERC721Router",
 				{
