@@ -25,6 +25,7 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
     "enrollRemoteRouterByAddress(uint32,address)": FunctionFragment;
     "handle(uint32,bytes32,bytes)": FunctionFragment;
     "initialize(address,address)": FunctionFragment;
+    "isTransferred(address,uint256)": FunctionFragment;
     "localTokenData(address)": FunctionFragment;
     "mapTokens(address,uint32,address,bool)": FunctionFragment;
     "owner()": FunctionFragment;
@@ -53,6 +54,10 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "initialize",
     values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isTransferred",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "localTokenData",
@@ -106,6 +111,10 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "handle", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "isTransferred",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "localTokenData",
     data: BytesLike
@@ -230,6 +239,12 @@ export class ERC721Router extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    isTransferred(
+      addr: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     localTokenData(
       arg0: string,
       overrides?: CallOverrides
@@ -308,6 +323,12 @@ export class ERC721Router extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  isTransferred(
+    addr: string,
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   localTokenData(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   mapTokens(
@@ -382,6 +403,12 @@ export class ERC721Router extends BaseContract {
       __tokenMapper: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    isTransferred(
+      addr: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     localTokenData(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
@@ -505,6 +532,12 @@ export class ERC721Router extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    isTransferred(
+      addr: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     localTokenData(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     mapTokens(
@@ -579,6 +612,12 @@ export class ERC721Router extends BaseContract {
       _xAppConnectionManager: string,
       __tokenMapper: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    isTransferred(
+      addr: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     localTokenData(

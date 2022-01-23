@@ -14,10 +14,10 @@ import {
 
 use(solidity);
 type baseContractInterfaces = {
-	XAppConnectionManager?: XAppConnectionManager;
-	UpdaterManager?: UpdaterManager;
-	Home?: Home;
-	ERC721Router?: ERC721Router;
+	XAppConnectionManager: XAppConnectionManager;
+	UpdaterManager: UpdaterManager;
+	Home: Home;
+	ERC721Router: ERC721Router;
 };
 
 const baseContracts: (keyof baseContractInterfaces)[] = [
@@ -33,9 +33,12 @@ enum Networks {
 	rinkeby = "rinkeby",
 }
 
-type replicaContractsInterface = {
-	[key in Networks]: Replica;
-};
+type replicaContractsInterface = [
+	{
+		name: keyof typeof Networks;
+		contract: Replica;
+	}
+];
 
 type NetworkData = {
 	hreObject: typeof companionNetworks["1000"];
@@ -63,7 +66,7 @@ export const setupTest = deployments.createFixture(
 		const { deployer, tokenMapper, updater } = await getNamedAccounts();
 		const [alice, bob] = await getUnnamedAccounts();
 
-		await deployments.fixture(["OpticsCore"]);
+		await deployments.fixture(["OpticsCore", "OpticsBridge"]);
 
 		// get core deployments
 		const networks: Overwrite<
@@ -94,9 +97,9 @@ export const setupTest = deployments.createFixture(
 				// @todo fix provider. test will go as all networks are same for hardhat
 				// But, if we use real companionNetworks using ganache, it will be different for each network
 				if (!network.contracts) {
-					network.contracts = {};
+					(network as any).contracts = {};
 				}
-				network.contracts[contract] = (await ethers.getContract(
+				network.contracts![contract] = (await ethers.getContract(
 					networkName + contract
 				)) as any;
 			}
@@ -122,11 +125,15 @@ export const setupTest = deployments.createFixture(
 					remote.name.toUpperCase() +
 					"_";
 				if (!local.replicas) {
-					(local as any).replicas = {};
+					(local as any).replicas = [];
 				}
-				local.replicas![remote.name] = (await ethers.getContract(
+				const replica = (await ethers.getContract(
 					replicaIdentifier + "Replica"
 				)) as Replica;
+				local.replicas!.push({
+					name: remote.name,
+					contract: replica,
+				});
 			}
 		}
 
@@ -143,18 +150,88 @@ export const setupTest = deployments.createFixture(
 
 describe("OpticsCore", () => {
 	let networks: NetworkData[];
+
+	const getNetworkByName = (name: keyof typeof Networks) => {
+		return networks.filter((elem) => elem.name === name)![0];
+	};
+
+	const getRemotes = (name: keyof typeof Networks) => {
+		return networks.filter((elem) => elem.name !== name);
+	};
+
+	const getNativeNetwork = () => {
+		return networks.filter((elem) => elem.native)![0];
+	};
+
 	before(async () => {
 		({ networks } = await setupTest());
 	});
 
 	describe("check deployment", () => {
+		it("check Home", async () => {
+			for (let index = 0; index < networks.length; index++) {
+				const network = networks[index];
+				const contracts = network.contracts;
+				expect(
+					(await contracts.Home.localDomain()).toString()
+				).to.be.equal(network.localDomain);
+				expect(await contracts.Home.updaterManager()).to.be.equal(
+					network.contracts.UpdaterManager.address
+				);
+			}
+		});
+
 		it("check Home is set", async () => {
 			for (let index = 0; index < networks.length; index++) {
 				const network = networks[index];
 				const contracts = network.contracts;
-				expect(await contracts!.XAppConnectionManager?.home()).to.eq(
-					contracts!.Home?.address
+				expect(await contracts.XAppConnectionManager.home()).to.eq(
+					contracts.Home.address
 				);
+			}
+		});
+
+		it("check Replicas are correct", async () => {
+			for (let index = 0; index < networks.length; index++) {
+				const local = networks[index];
+
+				const replicas = local.replicas;
+
+				for (let index = 0; index < replicas.length; index++) {
+					const replica = replicas[index];
+					expect(
+						(await replica.contract.localDomain()).toString()
+					).to.eq(local.localDomain);
+					expect(
+						(await replica.contract.remoteDomain()).toString()
+					).to.eq(getNetworkByName(replica.name).localDomain);
+				}
+			}
+		});
+
+		it("check token mappings", async () => {
+			for (const local of networks) {
+				const remotes = getRemotes(local.name);
+				for (const remote of remotes) {
+					if (!(local.native || remote.native)) {
+						continue;
+					}
+					if (local.native) {
+						expect(
+							await local.contracts.ERC721Router.remoteTokenIds(
+								local.nativeContract.address,
+								remote.localDomain
+							)
+						).to.eq(remote.nonNativeContract.address);
+					} else {
+						expect(
+							await local.contracts.ERC721Router.remoteTokenIds(
+								local.nonNativeContract.address,
+								remote.localDomain
+							)
+						).to.eq(getNativeNetwork().nativeContract.address);
+					}
+				}
 			}
 		});
 	});

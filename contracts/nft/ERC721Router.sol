@@ -40,6 +40,14 @@ contract ERC721Router is Router {
 		bool isNative
 	);
 
+	function isTransferred(address addr, uint256 tokenId)
+		public
+		view
+		returns (bool)
+	{
+		return localTokenData[addr].isTransferred[tokenId];
+	}
+
 	function initialize(address _xAppConnectionManager, address __tokenMapper)
 		public
 		initializer
