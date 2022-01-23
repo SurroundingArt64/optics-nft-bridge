@@ -21,6 +21,7 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
 interface ERC721RouterInterface extends ethers.utils.Interface {
   functions: {
+    "branchRoot(bytes32,bytes32[32],uint256)": FunctionFragment;
     "enrollRemoteRouter(uint32,bytes32)": FunctionFragment;
     "enrollRemoteRouterByAddress(uint32,address)": FunctionFragment;
     "handle(uint32,bytes32,bytes)": FunctionFragment;
@@ -39,6 +40,47 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
     "xAppConnectionManager()": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "branchRoot",
+    values: [
+      BytesLike,
+      [
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike
+      ],
+      BigNumberish
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "enrollRemoteRouter",
     values: [BigNumberish, BytesLike]
@@ -101,6 +143,7 @@ interface ERC721RouterInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
 
+  decodeFunctionResult(functionFragment: "branchRoot", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "enrollRemoteRouter",
     data: BytesLike
@@ -220,6 +263,46 @@ export class ERC721Router extends BaseContract {
   interface: ERC721RouterInterface;
 
   functions: {
+    branchRoot(
+      _leaf: BytesLike,
+      _proof: [
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike
+      ],
+      _index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string] & { _current: string }>;
+
     enrollRemoteRouter(
       _domain: BigNumberish,
       _router: BytesLike,
@@ -304,6 +387,46 @@ export class ERC721Router extends BaseContract {
     xAppConnectionManager(overrides?: CallOverrides): Promise<[string]>;
   };
 
+  branchRoot(
+    _leaf: BytesLike,
+    _proof: [
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike,
+      BytesLike
+    ],
+    _index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   enrollRemoteRouter(
     _domain: BigNumberish,
     _router: BytesLike,
@@ -385,6 +508,46 @@ export class ERC721Router extends BaseContract {
   xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    branchRoot(
+      _leaf: BytesLike,
+      _proof: [
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike
+      ],
+      _index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     enrollRemoteRouter(
       _domain: BigNumberish,
       _router: BytesLike,
@@ -529,6 +692,46 @@ export class ERC721Router extends BaseContract {
   };
 
   estimateGas: {
+    branchRoot(
+      _leaf: BytesLike,
+      _proof: [
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike
+      ],
+      _index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     enrollRemoteRouter(
       _domain: BigNumberish,
       _router: BytesLike,
@@ -611,6 +814,46 @@ export class ERC721Router extends BaseContract {
   };
 
   populateTransaction: {
+    branchRoot(
+      _leaf: BytesLike,
+      _proof: [
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike,
+        BytesLike
+      ],
+      _index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     enrollRemoteRouter(
       _domain: BigNumberish,
       _router: BytesLike,

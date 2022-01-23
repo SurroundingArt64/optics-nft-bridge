@@ -47,6 +47,8 @@
 		"@openzeppelin/contracts": "^3.4.2",
 		"@openzeppelin/contracts-upgradeable": "~3.4.2",
 		"@summa-tx/memview-sol": "^2.0.0",
+		"keccak256": "^1.0.6",
+		"merkletreejs": "^0.2.27",
 		"utility-types": "^3.10.0"
 	}
 }

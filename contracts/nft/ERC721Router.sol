@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 // ============ Internal Imports ============
 import {ERC721Message} from "./ERC721Message.sol";
 import {Router} from "../Router.sol";
-import {Home} from "@celo-org/optics-sol/contracts/Home.sol";
+import {Home, MerkleLib} from "@celo-org/optics-sol/contracts/Home.sol";
 import {XAppConnectionClient} from "../XAppConnectionClient.sol";
 import {IERC721NonNative} from "./IERC721NonNative.sol";
 import "hardhat/console.sol";
@@ -186,5 +186,13 @@ contract ERC721Router is Router {
 
 	function setTokenMapper(address __tokenMapper) external onlyOwner {
 		_tokenMapper = __tokenMapper;
+	}
+
+	function branchRoot(
+		bytes32 _leaf,
+		bytes32[32] calldata _proof,
+		uint256 _index
+	) public pure returns (bytes32 _current) {
+		return MerkleLib.branchRoot(_leaf, _proof, _index);
 	}
 }
