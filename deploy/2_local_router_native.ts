@@ -5,19 +5,19 @@ import contracts from "../utils/contracts.json";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 	const { deployments, getNamedAccounts, network, companionNetworks } = hre;
-	const { deploy, execute, read } = deployments;
+	const { deploy } = deployments;
 
 	const { deployer, tokenMapper } = await getNamedAccounts();
 	const localData =
 		contracts[
 			network.config!.chainId!.toString() as keyof typeof contracts
 		];
-	const remoteData =
-		contracts[
-			(await companionNetworks[
-				"NonNative"
-			].getChainId()) as keyof typeof contracts
-		];
+	// const remoteData =
+	// 	contracts[
+	// 		(await companionNetworks[
+	// 			"NonNative"
+	// 		].getChainId()) as keyof typeof contracts
+	// 	];
 
 	const Native721 = await deployments.getOrNull("Native721");
 	let NonNative721 = await companionNetworks[
