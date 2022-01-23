@@ -1,16 +1,20 @@
 import { keccak256 } from "@ethersproject/keccak256";
 import { expect, use } from "chai";
 import { solidity } from "ethereum-waffle";
-import { ethers } from "ethers";
+import { ethers } from "hardhat";
 import {
 	getNativeNetwork,
 	getRemotes,
 	NetworkData,
 	setupTest,
 } from "./fixtures";
-import { getEncodePackedForReceipt } from "./utils";
+import { MerkleTreeLib } from "./merkle";
+import { signUpdate } from "./signature";
+import { getEncodePackedForReceipt, initialRoots } from "./utils";
 
 const abiCoder = new ethers.utils.AbiCoder();
+
+const merkle = new MerkleTreeLib();
 
 use(solidity);
 describe("OpticsBridge", () => {
@@ -99,11 +103,73 @@ describe("OpticsBridge", () => {
 					// it can be ambiguous hence hardcoded
 					encodePackedMessage
 				);
-			console.log(
-				await local.replicas
-					.filter((elem) => elem.name === remote.name)[0]
-					.contract.committedRoot()
+			const remoteReplica = remote.replicas.filter(
+				(elem) => elem.name === local.name
+			)[0].contract;
+
+			const oldRoot = await remoteReplica.committedRoot();
+			// const newRoot = await local.contracts.Home.root();
+
+			// // replace nth object of the array
+			const updateTreeNodesOnOppositeHome = initialRoots.map(
+				(elem, index) => {
+					if (index === 0) {
+						return formattedMessage;
+					}
+					return elem;
+				}
 			);
+			const addedNodes: any[] = [];
+			updateTreeNodesOnOppositeHome.forEach((elem) => {
+				addedNodes.push(merkle.insert(elem));
+			});
+
+			const updateTree = await remote.contracts.ERC721Router.branchRoot(
+				formattedMessage,
+				addedNodes as any,
+				0
+			);
+
+			const { updater } = await remote.hreObject.getNamedAccounts();
+
+			const { signature } = await signUpdate(
+				oldRoot,
+				updateTree,
+				local.localDomain.toString(),
+				await ethers.getSigner(updater)
+			);
+
+			await remoteReplica.update(oldRoot, updateTree, signature);
+
+			await new Promise((resolve) =>
+				setTimeout(() => {
+					resolve({});
+				}, 10 * 1000)
+			);
+
+			await remoteReplica.prove(formattedMessage, addedNodes as any, 0);
+			await remoteReplica.process(encodePackedMessage);
+		});
+
+		it("Lock on native 2", async () => {
+			const local = getNativeNetwork(networks);
+			const remote = getRemotes(networks, local.name)![0];
+
+			await local.nativeContract.mintBatch(100);
+
+			await local.nativeContract.setApprovalForAll(
+				local.contracts.ERC721Router.address,
+				true
+			);
+
+			const tx = await local.contracts.ERC721Router.send(
+				local.nativeContract.address,
+				2,
+				remote.localDomain,
+				deployer
+			);
+
+			await tx.wait();
 		});
 	});
 });

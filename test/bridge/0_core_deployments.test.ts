@@ -48,6 +48,7 @@ describe("OpticsCore - Deployments", () => {
 
 				for (let index = 0; index < replicas.length; index++) {
 					const replica = replicas[index];
+
 					expect(
 						(await replica.contract.localDomain()).toString()
 					).to.eq(local.localDomain);
@@ -104,6 +105,12 @@ describe("OpticsCore - Deployments", () => {
 						);
 					}
 				}
+			}
+		});
+
+		it("log roots", async () => {
+			for (const network of networks) {
+				console.log("Root:", await network.contracts.Home.root());
 			}
 		});
 	});
