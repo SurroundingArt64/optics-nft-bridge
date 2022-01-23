@@ -112,7 +112,6 @@ const config: HardhatUserConfig = {
 			80001: 0,
 			44787: 0,
 		},
-
 		updater: {
 			default: 3,
 			4: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
