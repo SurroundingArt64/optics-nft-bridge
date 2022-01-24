@@ -101,7 +101,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 		const { deploy, execute } = deployments;
 
 		const { deployer, updater } = await getNamedAccounts();
-
 		const UpdaterManager = await deploy(networkName + "UpdaterManager", {
 			from: deployer,
 			contract: "UpdaterManager",
