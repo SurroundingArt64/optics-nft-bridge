@@ -6,7 +6,6 @@ import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
-import "solidity-coverage";
 import { readFileSync } from "fs";
 import { ethers } from "ethers";
 
@@ -119,6 +118,9 @@ const config: HardhatUserConfig = {
 			80001: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
 			44787: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
 		},
+	},
+	mocha: {
+		require: ["ts-node/register", "hardhat/register"],
 	},
 };
 
