@@ -107,11 +107,5 @@ describe("OpticsCore - Deployments", () => {
 				}
 			}
 		});
-
-		it("log roots", async () => {
-			for (const network of networks) {
-				console.log("Root:", await network.contracts.Home.root());
-			}
-		});
 	});
 });

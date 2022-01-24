@@ -12,6 +12,8 @@ import {IERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 import "./ERC721Message.sol";
 
+import "hardhat/console.sol";
+
 contract ERC721Router is Router {
 	address _tokenMapper;
 	struct LocalTokenData {
@@ -78,6 +80,7 @@ contract ERC721Router is Router {
 			uint256 tokenId,
 			uint8 actionType
 		) = ERC721Message.decodeMessage(_message);
+
 		require(
 			ERC721Message.ActionType(actionType) !=
 				ERC721Message.ActionType.Invalid,
