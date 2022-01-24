@@ -59,11 +59,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 		const networkName = network.name.toUpperCase() + "_";
 
 		const { deployments, getNamedAccounts } = network.hreObject;
-		const { deploy } = deployments;
+		const { deploy, execute } = deployments;
 
 		const { deployer, tokenMapper } = await getNamedAccounts();
 
-		await deploy(networkName + "ERC721Router", {
+		const Router = await deploy(networkName + "ERC721Router", {
 			from: deployer,
 			log: true,
 			contract: "ERC721Router",
@@ -85,6 +85,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 			args: [],
 			skipIfAlreadyDeployed: true,
 		});
+		if (!network.native) {
+			// setLocalRouter in ERC721
+			await execute(
+				networkName + "ERC721",
+				{ from: deployer, log: true },
+				"setLocalRouter",
+				Router.address
+			);
+		}
 	}
 
 	for (let local of networks) {

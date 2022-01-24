@@ -15,16 +15,19 @@ abstract contract IERC721NonNative is ERC721, Ownable {
 		_localRouter = _router;
 	}
 
-	function handleExit(address to, uint256 tokenId) external onlyLocalRouter {
+	function handleExit(address to, uint256 tokenId)
+		external
+		onlyLocalRouterOrReplica
+	{
 		_mint(to, tokenId);
 	}
 
-	function handleDeposit(uint256 tokenId) external onlyLocalRouter {
+	function handleDeposit(uint256 tokenId) external onlyLocalRouterOrReplica {
 		require(ownerOf(tokenId) == _localRouter, "Cannot burn un-owner token");
 		_burn(tokenId);
 	}
 
-	modifier onlyLocalRouter() {
+	modifier onlyLocalRouterOrReplica() {
 		require(
 			msg.sender == _localRouter,
 			"Only local router can call this function"
