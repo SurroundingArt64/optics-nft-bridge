@@ -23,6 +23,35 @@ describe("OpticsBridge", () => {
 	});
 
 	describe("transfer from native to remote 1", () => {
+		it("generate", async () => {
+			const local = getNativeNetwork(networks);
+			const formattedMessage =
+				"0x05e97104a73dcbd76e8178483e6f5d209675ff9a7e254b7e334822fc245841ea";
+
+			const updatedTreeNodesOnOppositeHome = initialRoots.map(
+				(elem, index) => {
+					if (index === 0) {
+						return formattedMessage;
+					}
+					return elem;
+				}
+			);
+			const addedNodes: any[] = [];
+			const merkle = new MerkleTreeLib();
+
+			updatedTreeNodesOnOppositeHome.forEach((elem) => {
+				addedNodes.push(merkle.insert(elem));
+			});
+
+			const updateTree = await local.contracts.ERC721Router.branchRoot(
+				formattedMessage,
+				addedNodes as any,
+				0
+			);
+
+			console.log(addedNodes);
+			console.log(updateTree);
+		});
 		it("Native to Non-Native 1", async () => {
 			const local = getNativeNetwork(networks);
 			const remote = getRemotes(networks, local.name)![0];

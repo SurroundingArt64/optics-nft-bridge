@@ -25,7 +25,11 @@ const accounts = () => {
 	const priv = readFileSync(process.env.PRIVATE_KEY as string, "utf8")
 		.toString()
 		.trim();
-	return [priv];
+
+	const updater = readFileSync(process.env.UPDATER_KEY as string, "utf8")
+		.toString()
+		.trim();
+	return [priv, updater];
 };
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
@@ -52,6 +56,9 @@ const config: HardhatUserConfig = {
 			chainId: 80001,
 			tags: ["OpticsCore"],
 			gasPrice: 2_500_000_000,
+			etherscan: {
+				apiKey: process.env.POLYGONSCAN_API_KEY,
+			},
 		},
 		alfajores: {
 			url: process.env.ALFAJORES_URL || "",
