@@ -51,11 +51,13 @@ const config: HardhatUserConfig = {
 			},
 			chainId: 80001,
 			tags: ["OpticsCore"],
+			gasPrice: 2_500_000_000,
 		},
 		alfajores: {
 			url: process.env.ALFAJORES_URL || "",
 			accounts: process.env.PRIVATE_KEY !== undefined ? accounts() : [],
 			chainId: 44787,
+			gasPrice: 1_000_000_000,
 		},
 		ropsten: {
 			url: process.env.ROPSTEN_URL || "",
@@ -113,10 +115,10 @@ const config: HardhatUserConfig = {
 		},
 		updater: {
 			default: 3,
-			4: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
-			42: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
-			80001: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
-			44787: 0x53fba61e301d5339dea6847cb0e00628ae0b345b,
+			4: "0x53fba61e301d5339dea6847cb0e00628ae0b345b",
+			42: "0x53fba61e301d5339dea6847cb0e00628ae0b345b",
+			80001: "0x53fba61e301d5339dea6847cb0e00628ae0b345b",
+			44787: "0x53fba61e301d5339dea6847cb0e00628ae0b345b",
 		},
 	},
 	mocha: {
