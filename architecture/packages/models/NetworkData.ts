@@ -6,7 +6,7 @@ import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 		timestamps: true,
 	},
 })
-export default class ChainDataRepository {
+export default class NetworkRepository {
 	@prop()
 	networkId: number;
 
@@ -26,4 +26,4 @@ export default class ChainDataRepository {
 	rpcFallbacks: string[];
 }
 
-export const ChainDataModel = getModelForClass(ChainDataRepository);
+export const NetworkModel = getModelForClass(NetworkRepository);
