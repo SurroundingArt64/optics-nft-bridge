@@ -4,7 +4,7 @@ import { join } from "path";
 
 import { Container } from "typedi";
 import { MongoContainer } from "./utilities/MongoContainer";
-import { NetworkFunctions } from "./functions/NetworkFunctions";
+import { NetworkFunctions } from "./functions/network/NetworkFunctions";
 
 import { Log, LogLevelEnum } from "./utilities/Logger";
 import { App } from "./App";

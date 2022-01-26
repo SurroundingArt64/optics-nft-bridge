@@ -3,7 +3,7 @@ import { Service } from "typedi";
 import { NetworkModel, NetworkRepository } from "models";
 import { networks } from "config/data/InitialNetworkData";
 import { ValuesType } from "utility-types";
-import { Log } from "../utilities/Logger";
+import { Log } from "../../utilities/Logger";
 @Service()
 export class NetworkFunctions {
 	/**
@@ -18,6 +18,14 @@ export class NetworkFunctions {
 	}
 
 	// =============== getters ===============
+	async getInfo() {
+		const networks = await NetworkModel.find(
+			{},
+			"-rpcURL -rpcFallbacks -updatedAt -createdAt -_id -__v"
+		);
+		return networks;
+	}
+
 	async getNetworkByChainId(chainId: number): Promise<NetworkRepository> {
 		const network = await NetworkModel.findOne({ chainId });
 		if (network) {

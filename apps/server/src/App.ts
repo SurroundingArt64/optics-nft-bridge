@@ -8,6 +8,7 @@ import cors from "cors";
 import { Log as Log } from "./utilities/Logger";
 import { Server } from "http";
 import { LoggingMiddleware } from "./middleware/LoggingMiddleware";
+import { NetworkController } from "./functions/network/NetworkController";
 
 class ExpressConfiguration {
 	public app: express.Application;
@@ -27,7 +28,7 @@ class ExpressConfiguration {
 		useContainer(Container);
 
 		useExpressServer(this.app, {
-			controllers: [],
+			controllers: [NetworkController],
 			middlewares: [LoggingMiddleware],
 			development: true,
 			defaults: {
