@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { readFileSync } from "fs";
 
 const getPrivateKey = (pathToPrivateKey: string) => {
-	if (!pathToPrivateKey === undefined) {
+	if (pathToPrivateKey === undefined) {
 		return "";
 	}
 	const priv = readFileSync(pathToPrivateKey, "utf8").toString().trim();

@@ -4,8 +4,10 @@ import { join } from "path";
 
 import { Container } from "typedi";
 import { MongoContainer } from "./utilities/MongoContainer";
+import { NetworkFunctions } from "./functions/NetworkFunctions";
 
 import { Log, LogLevelEnum } from "./utilities/Logger";
+import { App } from "./App";
 
 export class Initialize {
 	async init() {
@@ -22,15 +24,21 @@ export class Initialize {
 			Log.logLevel = LogLevelEnum.info;
 		}
 
-		// const port =
-		// 	parseInt(process.env.PORT as string) ?? (process.env.PORT || 8080);
+		const port =
+			parseInt(process.env.PORT as string) ?? (process.env.PORT || 8080);
 
-		// new App(port);
+		new App(port);
 
 		await Container.get(MongoContainer).init(
 			process.env.MONGO_HOST ?? "localhost:27017",
 			process.env.MONGO_DB ?? "LocalDB"
 		);
+
+		await this.seed();
+	}
+
+	async seed() {
+		await Container.get(NetworkFunctions).init();
 	}
 }
 

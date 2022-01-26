@@ -1,7 +1,9 @@
 import { Service } from "typedi";
-import NetworkRepository, { NetworkModel } from "models/NetworkData";
+// import NetworkRepository, { NetworkModel } from "models";
+import { NetworkModel, NetworkRepository } from "models";
 import { networks } from "../data/InitialNetworkData";
 import { ValuesType } from "utility-types";
+import { Log } from "../utilities/Logger";
 @Service()
 export class NetworkFunctions {
 	/**
@@ -55,8 +57,10 @@ export class NetworkFunctions {
 			chainId: body.chainId,
 		});
 		if (network) {
+			Log.info(`Network ${body.name} already exists`);
 			return network;
 		} else {
+			Log.info(`Creating network ${body.name}`);
 			const networkData: NetworkRepository = {
 				...body,
 				...body.contracts,

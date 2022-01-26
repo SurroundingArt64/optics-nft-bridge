@@ -1,23 +1,43 @@
-import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import {
+	getModelForClass,
+	modelOptions,
+	prop,
+	Severity,
+} from "@typegoose/typegoose";
 
 @modelOptions({
 	schemaOptions: {
 		collection: "ChainData",
 		timestamps: true,
 	},
+	options: {
+		allowMixed: Severity.ALLOW,
+	},
 })
-export default class NetworkRepository {
+export class NetworkRepository {
 	@prop()
-	networkId: number;
+	chainId: number;
 
 	@prop()
-	network_name: string;
+	name: string;
 
 	@prop()
-	home_address: string;
+	Home: string;
+
+	@prop()
+	ERC721Router: string;
+
+	@prop()
+	UpdaterManager: string;
+
+	@prop()
+	XAppConnectionManager: string;
 
 	@prop()
 	localDomain: number;
+
+	@prop()
+	remoteDomains: number[];
 
 	@prop()
 	rpcURL: string;

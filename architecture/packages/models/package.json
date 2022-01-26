@@ -2,15 +2,12 @@
 	"name": "models",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"tsconfig": "*",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
+	"main": "./index.js",
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"tsconfig": "*",
 		"@typegoose/typegoose": "^9.5.0"
 	}
 }
