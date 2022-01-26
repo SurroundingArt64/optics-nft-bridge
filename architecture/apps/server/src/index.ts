@@ -1,12 +1,39 @@
-import express from "express";
+import "reflect-metadata";
+import { config } from "dotenv";
+import { join } from "path";
 
-export class App {
-	static init() {
-		const app = express();
-		app.listen(8080, () => {
-			console.log("Listening on port 8080");
+import { Container } from "typedi";
+import { MongoContainer } from "./utilities/MongoContainer";
+
+import { Log, LogLevelEnum } from "./utilities/Logger";
+
+export class Initialize {
+	async init() {
+		config({
+			path: join(__dirname, "..", ".env"),
 		});
+		console.log("NODE_ENV:", process.env.NODE_ENV);
+		if (process.env.NODE_ENV === "production") {
+			Log.logLevel = LogLevelEnum.debug;
+		}
+		if (process.env.NODE_ENV === "testing") {
+			Log.logLevel = LogLevelEnum.warn;
+		} else {
+			Log.logLevel = LogLevelEnum.info;
+		}
+
+		// const port =
+		// 	parseInt(process.env.PORT as string) ?? (process.env.PORT || 8080);
+
+		// new App(port);
+
+		await Container.get(MongoContainer).init(
+			process.env.MONGO_HOST ?? "localhost:27017",
+			process.env.MONGO_DB ?? "LocalDB"
+		);
 	}
 }
 
-App.init();
+new Initialize().init().catch((err) => {
+	console.error(err);
+});
