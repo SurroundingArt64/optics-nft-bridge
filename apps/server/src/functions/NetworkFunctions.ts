@@ -1,7 +1,7 @@
 import { Service } from "typedi";
 // import NetworkRepository, { NetworkModel } from "models";
 import { NetworkModel, NetworkRepository } from "models";
-import { networks } from "../data/InitialNetworkData";
+import { networks } from "config/data/InitialNetworkData";
 import { ValuesType } from "utility-types";
 import { Log } from "../utilities/Logger";
 @Service()

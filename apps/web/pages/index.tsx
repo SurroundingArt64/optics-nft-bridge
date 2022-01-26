@@ -149,6 +149,8 @@ export default function Home() {
 		}
 	}, [currentChainId]);
 
+	const getHome = () => {};
+
 	return (
 		<div>
 			{connected && (

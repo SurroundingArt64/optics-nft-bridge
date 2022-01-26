@@ -1,5 +1,5 @@
 {
-	"name": "optics-nft-bridge",
+	"name": "optics-contracts",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
@@ -43,7 +43,7 @@
 		"typescript": "^4.5.4"
 	},
 	"dependencies": {
-		"@celo-org/optics-sol": "file:../optics-monorepo/solidity/optics-core",
+		"@celo-org/optics-sol": "file:../../../optics-monorepo/solidity/optics-core",
 		"@openzeppelin/contracts": "^3.4.2",
 		"@openzeppelin/contracts-upgradeable": "~3.4.2",
 		"@summa-tx/memview-sol": "^2.0.0",
