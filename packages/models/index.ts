@@ -1,1 +1,2 @@
-export * from "./NetworkData";
+export * from "./NetworkRepository";
+export * from "./ReplicaRepository";

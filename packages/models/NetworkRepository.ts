@@ -7,7 +7,7 @@ import {
 
 @modelOptions({
 	schemaOptions: {
-		collection: "ChainData",
+		collection: "NetworkRepository",
 		timestamps: true,
 	},
 	options: {
