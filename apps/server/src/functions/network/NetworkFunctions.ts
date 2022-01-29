@@ -1,15 +1,27 @@
 import { Service } from "typedi";
 // import NetworkRepository, { NetworkModel } from "models";
 import { NetworkModel, NetworkRepository, ReplicaModel } from "models";
-import { networks } from "config/data/InitialNetworkData";
+import { getNetworks } from "config/data/InitialNetworkData";
 import { ValuesType } from "utility-types";
 import { Log } from "../../utilities/Logger";
+
+import { readFileSync } from "fs";
+
+const getPrivateKey = (pathToPrivateKey: string) => {
+	if (pathToPrivateKey === undefined) {
+		return "";
+	}
+	const priv = readFileSync(pathToPrivateKey, "utf8").toString().trim();
+
+	return priv;
+};
 @Service()
 export class NetworkFunctions {
 	/**
 	 *
 	 */
 	async init() {
+		const networks = getNetworks(getPrivateKey);
 		for (const network of networks) {
 			await this.createIfNotExists(network);
 		}
@@ -119,7 +131,7 @@ export class NetworkFunctions {
 		}
 	}
 
-	async createIfNotExists(body: ValuesType<typeof networks>) {
+	async createIfNotExists(body: ValuesType<ReturnType<typeof getNetworks>>) {
 		const network = await NetworkModel.findOne({
 			chainId: body.chainId,
 		});

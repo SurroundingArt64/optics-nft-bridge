@@ -72,7 +72,7 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@celo-org/optics-sol@file:../../optics-monorepo/solidity/optics-core":
+"@celo-org/optics-sol@file:../optics-monorepo/solidity/optics-core":
   version "0.0.0"
   dependencies:
     "@openzeppelin/contracts" "^3.4.2"

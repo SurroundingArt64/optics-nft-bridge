@@ -5,6 +5,8 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import { ValuesType } from "utility-types";
 
+import { getNetworks } from "./networks";
+
 const getEthereum = () => {
 	const { ethereum } = window as unknown as {
 		ethereum: MetaMaskInpageProvider;
@@ -40,6 +42,11 @@ export default function Home() {
 		useState<boolean>(false);
 	const [localNetworkDetails, setLocalNetworkDetails] =
 		useState<ValuesType<typeof supportedNetworks>>();
+
+	const [state, setState] = useState<{
+		tokenId: string;
+		tokenAddress: string;
+	}>();
 
 	const [currentChainId, setCurrentChainId] = useState<number>();
 
@@ -149,6 +156,96 @@ export default function Home() {
 		}
 	}, [currentChainId]);
 
+	const handleState = ({ target: { value, name } }) => {
+		setState((state) => {
+			return {
+				...state,
+				[name]: value,
+			};
+		});
+	};
+
+	const checkIfMapped = async () => {
+		if (state.tokenAddress) {
+			// get erc721 router for localNetwork
+			const localNetworkAddresses = getNetworks().find(
+				(elem) =>
+					elem.chainId.toString() ===
+					localNetworkDetails.chainId.toString()
+			);
+			const ERC721Router = new ethers.Contract(
+				localNetworkAddresses.contracts.ERC721Router,
+				[
+					{
+						inputs: [
+							{
+								internalType: "address",
+								name: "",
+								type: "address",
+							},
+						],
+						name: "localTokenData",
+						outputs: [
+							{
+								internalType: "bool",
+								name: "isNative",
+								type: "bool",
+							},
+						],
+						stateMutability: "view",
+						type: "function",
+					},
+					{
+						inputs: [
+							{
+								internalType: "address",
+								name: "_token",
+								type: "address",
+							},
+							{
+								internalType: "uint256",
+								name: "_tokenId",
+								type: "uint256",
+							},
+							{
+								internalType: "uint32",
+								name: "_domain",
+								type: "uint32",
+							},
+							{
+								internalType: "address",
+								name: "_recipient",
+								type: "address",
+							},
+						],
+						name: "send",
+						outputs: [],
+						stateMutability: "nonpayable",
+						type: "function",
+					},
+				],
+				getProvider().getSigner(
+					"0xFC77079c043B39A64eE9fa70863f25C9A0381D08"
+				)
+			);
+
+			if (
+				(await ERC721Router.localTokenData(state.tokenAddress)) === true
+			) {
+				const tx = await ERC721Router.send(
+					state.tokenAddress,
+					state.tokenId,
+					2000,
+					"0xFC77079c043B39A64eE9fa70863f25C9A0381D08",
+					{ from: "0xFC77079c043B39A64eE9fa70863f25C9A0381D08" }
+				);
+				console.log(tx.hash);
+
+				await tx.wait();
+			}
+		}
+	};
+
 	return (
 		<div>
 			{connected && (
@@ -184,6 +281,37 @@ export default function Home() {
 									</div>
 								);
 							})}
+						</>
+					)}
+
+					{bridgeTo && (
+						<>
+							Bridge to {bridgeTo.displayName}
+							<br />
+							Enter Token Address on{" "}
+							{localNetworkDetails.displayName}:
+							<input
+								type="text"
+								onChange={(e) => {
+									handleState(e);
+								}}
+								name="tokenAddress"
+								id=""
+								value={state?.tokenAddress ?? ""}
+							/>
+							<br />
+							Enter Token Id
+							{localNetworkDetails.displayName}:
+							<input
+								type="text"
+								onChange={(e) => {
+									handleState(e);
+								}}
+								name="tokenId"
+								id=""
+								value={state?.tokenId}
+								onBlur={checkIfMapped}
+							/>
 						</>
 					)}
 
