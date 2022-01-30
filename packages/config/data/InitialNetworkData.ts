@@ -1,19 +1,14 @@
 import { ethers } from "ethers";
 
-export const getNetworks = (
-	getPrivateKey: (pathToPrivateKey: string) => string
-) => [
+export const getNetworks = () => [
 	{
-		rpcURL: process.env.POLYGON_MUMBAI_URL || "",
+		rpcURL:
+			process.env.POLYGON_MUMBAI_URL ||
+			"https://polygon-mumbai.infura.io/v3/50b044ed10aa430cb8c59f9ff29a2d20",
 		rpcFallbacks: [],
 		name: "mumbai",
 		chainId: 80001,
 		gasPrice: 2_500_000_000,
-		accounts: {
-			deployer: getPrivateKey(
-				process.env.POLYGON_MUMBAI_DEPLOYER_KEY as string
-			),
-		},
 		localDomain: 1000,
 		remoteDomains: [2000, 3000],
 		contracts: {
@@ -33,16 +28,13 @@ export const getNetworks = (
 		},
 	},
 	{
-		rpcURL: process.env.ALFAJORES_URL || "",
+		rpcURL:
+			process.env.ALFAJORES_URL ||
+			"https://alfajores-forno.celo-testnet.org",
 		rpcFallbacks: [],
 		name: "alfajores",
 		chainId: 44787,
 		gasPrice: 1_000_000_000,
-		accounts: {
-			deployer: getPrivateKey(
-				process.env.ALFAJORES_DEPLOYER_KEY as string
-			),
-		},
 		localDomain: 2000,
 		remoteDomains: [1000, 3000],
 		contracts: {
@@ -62,14 +54,13 @@ export const getNetworks = (
 		},
 	},
 	{
-		rpcURL: process.env.RINKEBY_URL || "",
+		rpcURL:
+			process.env.RINKEBY_URL ||
+			"https://rinkeby.infura.io/v3/50b044ed10aa430cb8c59f9ff29a2d20",
 		rpcFallbacks: [],
 		name: "rinkeby",
 		chainId: 4,
 		gasPrice: 2_000_000_000,
-		accounts: {
-			deployer: getPrivateKey(process.env.RINKEBY_DEPLOYER_KEY as string),
-		},
 		localDomain: 3000,
 		remoteDomains: [1000, 2000],
 		contracts: {

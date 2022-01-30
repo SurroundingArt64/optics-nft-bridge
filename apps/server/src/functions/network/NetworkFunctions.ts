@@ -5,23 +5,14 @@ import { getNetworks } from "config/data/InitialNetworkData";
 import { ValuesType } from "utility-types";
 import { Log } from "../../utilities/Logger";
 
-import { readFileSync } from "fs";
-
-const getPrivateKey = (pathToPrivateKey: string) => {
-	if (pathToPrivateKey === undefined) {
-		return "";
-	}
-	const priv = readFileSync(pathToPrivateKey, "utf8").toString().trim();
-
-	return priv;
-};
+export const networkData = getNetworks();
 @Service()
 export class NetworkFunctions {
 	/**
 	 *
 	 */
 	async init() {
-		const networks = getNetworks(getPrivateKey);
+		const networks = getNetworks();
 		for (const network of networks) {
 			await this.createIfNotExists(network);
 		}
